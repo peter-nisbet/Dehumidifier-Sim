@@ -1,0 +1,963 @@
+/******************************************************************************
+ * Copyright (c) 2013 - 2014, AllSeen Alliance. All rights reserved.
+ *
+ *    Permission to use, copy, modify, and/or distribute this software for any
+ *    purpose with or without fee is hereby granted, provided that the above
+ *    copyright notice and this permission notice appear in all copies.
+ *
+ *    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+ *    WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+ *    MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ *    ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+ *    WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ *    ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+ *    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ ******************************************************************************/
+
+/**
+ * Per-module definition of the current module for debug logging.  Must be defined
+ * prior to first inclusion of aj_debug.h.
+ * The corresponding flag dbgAJSVCAPP is defined in the containing sample app.
+ */
+#define AJ_MODULE AJSVCAPP
+#include <ajtcl/aj_debug.h>
+
+#include <ajtcl/alljoyn.h>
+#include <alljoyn/controlpanel/Common/ConstraintList.h>
+#include <alljoyn/controlpanel/ControlPanelService.h>
+#include "ControlPanelProvided.h"
+
+#ifndef NDEBUG
+extern AJ_EXPORT uint8_t dbgAJSVCAPP;
+#endif
+
+const char HeavenFresh_AirPurifierAirPurifierControllerObjectPath[] = "/ControlPanel/HeavenFresh_AirPurifier/AirPurifierController";
+const char enHeavenFresh_AirPurifierAirPurifierControllerObjectPath[] = "/ControlPanel/HeavenFresh_AirPurifier/AirPurifierController/en";
+const char enHeavenFresh_AirPurifierSelectFlowObjectPath[] = "/ControlPanel/HeavenFresh_AirPurifier/AirPurifierController/en/selectFlow";
+const char enHeavenFresh_AirPurifierSelectTimerObjectPath[] = "/ControlPanel/HeavenFresh_AirPurifier/AirPurifierController/en/selectTimer";
+const char enHeavenFresh_AirPurifierCleanMonitorStatusObjectPath[] = "/ControlPanel/HeavenFresh_AirPurifier/AirPurifierController/en/cleanMonitorStatus";
+const char enHeavenFresh_AirPurifierOdorDustAndAllergenContainerObjectPath[] = "/ControlPanel/HeavenFresh_AirPurifier/AirPurifierController/en/odorDustAndAllergenContainer";
+const char enHeavenFresh_AirPurifierOdorStatusObjectPath[] = "/ControlPanel/HeavenFresh_AirPurifier/AirPurifierController/en/odorDustAndAllergenContainer/odorStatus";
+const char enHeavenFresh_AirPurifierDustStatusObjectPath[] = "/ControlPanel/HeavenFresh_AirPurifier/AirPurifierController/en/odorDustAndAllergenContainer/dustStatus";
+const char enHeavenFresh_AirPurifierAllergenStatusObjectPath[] = "/ControlPanel/HeavenFresh_AirPurifier/AirPurifierController/en/odorDustAndAllergenContainer/allergenStatus";
+const char enHeavenFresh_AirPurifierCleanMetalGridAndReplaceFilterContainerObjectPath[] = "/ControlPanel/HeavenFresh_AirPurifier/AirPurifierController/en/cleanMetalGridAndReplaceFilterContainer";
+const char enHeavenFresh_AirPurifierCleanMetalGridStatusObjectPath[] = "/ControlPanel/HeavenFresh_AirPurifier/AirPurifierController/en/cleanMetalGridAndReplaceFilterContainer/cleanMetalGridStatus";
+const char enHeavenFresh_AirPurifierReplaceFilterStatusObjectPath[] = "/ControlPanel/HeavenFresh_AirPurifier/AirPurifierController/en/cleanMetalGridAndReplaceFilterContainer/replaceFilterStatus";
+const char enHeavenFresh_AirPurifierPowerAirPurifierObjectPath[] = "/ControlPanel/HeavenFresh_AirPurifier/AirPurifierController/en/powerAirPurifier";
+const char enHeavenFresh_AirPurifierResetAirPurifierObjectPath[] = "/ControlPanel/HeavenFresh_AirPurifier/AirPurifierController/en/resetAirPurifier";
+
+ContainerWidget HeavenFresh_AirPurifierAirPurifierController;
+PropertyWidget HeavenFresh_AirPurifierSelectFlow;
+PropertyWidget HeavenFresh_AirPurifierSelectTimer;
+PropertyWidget HeavenFresh_AirPurifierCleanMonitorStatus;
+ContainerWidget HeavenFresh_AirPurifierOdorDustAndAllergenContainer;
+PropertyWidget HeavenFresh_AirPurifierOdorStatus;
+PropertyWidget HeavenFresh_AirPurifierDustStatus;
+PropertyWidget HeavenFresh_AirPurifierAllergenStatus;
+ContainerWidget HeavenFresh_AirPurifierCleanMetalGridAndReplaceFilterContainer;
+PropertyWidget HeavenFresh_AirPurifierCleanMetalGridStatus;
+PropertyWidget HeavenFresh_AirPurifierReplaceFilterStatus;
+ActionWidget HeavenFresh_AirPurifierPowerAirPurifier;
+ActionWidget HeavenFresh_AirPurifierResetAirPurifier;
+
+/*
+ * Static variables used to fill widgets
+ */
+static const char* const HeavenFresh_AirPurifierAirPurifierControllerLabel[] = { "Heaven Fresh AIR PURIFIER" };
+static const uint16_t HeavenFresh_AirPurifierAirPurifierControllerHints[] = { LAYOUT_HINT_VERTICAL_LINEAR };
+static const char* const HeavenFresh_AirPurifierSelectFlowSignature = "q";
+static const char* const HeavenFresh_AirPurifierSelectFlowLabel[] = { "Select Flow:" };
+static const uint16_t HeavenFresh_AirPurifierSelectFlowHints[] = { PROPERTY_WIDGET_HINT_RADIOBUTTON };
+static ConstraintList HeavenFresh_AirPurifierSelectFlowConstraintList[5];
+static const uint16_t HeavenFresh_AirPurifierSelectFlowConstraintValue0 = 0;
+static const char* const HeavenFresh_AirPurifierSelectFlowDisplay0[] = { "HI" };
+static const uint16_t HeavenFresh_AirPurifierSelectFlowConstraintValue1 = 1;
+static const char* const HeavenFresh_AirPurifierSelectFlowDisplay1[] = { "MED" };
+static const uint16_t HeavenFresh_AirPurifierSelectFlowConstraintValue2 = 2;
+static const char* const HeavenFresh_AirPurifierSelectFlowDisplay2[] = { "LOW" };
+static const uint16_t HeavenFresh_AirPurifierSelectFlowConstraintValue3 = 3;
+static const char* const HeavenFresh_AirPurifierSelectFlowDisplay3[] = { "QUIET" };
+static const uint16_t HeavenFresh_AirPurifierSelectFlowConstraintValue4 = 4;
+static const char* const HeavenFresh_AirPurifierSelectFlowDisplay4[] = { "AUTO" };
+static const char* const HeavenFresh_AirPurifierSelectTimerSignature = "q";
+static const char* const HeavenFresh_AirPurifierSelectTimerLabel[] = { "Select Timer:" };
+static const uint16_t HeavenFresh_AirPurifierSelectTimerHints[] = { PROPERTY_WIDGET_HINT_RADIOBUTTON };
+static ConstraintList HeavenFresh_AirPurifierSelectTimerConstraintList[3];
+static const uint16_t HeavenFresh_AirPurifierSelectTimerConstraintValue0 = 0;
+static const char* const HeavenFresh_AirPurifierSelectTimerDisplay0[] = { "8H" };
+static const uint16_t HeavenFresh_AirPurifierSelectTimerConstraintValue1 = 1;
+static const char* const HeavenFresh_AirPurifierSelectTimerDisplay1[] = { "2H" };
+static const uint16_t HeavenFresh_AirPurifierSelectTimerConstraintValue2 = 2;
+static const char* const HeavenFresh_AirPurifierSelectTimerDisplay2[] = { "1H" };
+static const char* const HeavenFresh_AirPurifierCleanMonitorStatusSignature = "q";
+static const char* const HeavenFresh_AirPurifierCleanMonitorStatusLabel[] = { "Clean Monitor" };
+static const uint16_t HeavenFresh_AirPurifierCleanMonitorStatusHints[] = { PROPERTY_WIDGET_HINT_SLIDER };
+static const uint16_t HeavenFresh_AirPurifierCleanMonitorStatusConstraintRangeMin = 0;
+static const uint16_t HeavenFresh_AirPurifierCleanMonitorStatusConstraintRangeMax = 100;
+static const uint16_t HeavenFresh_AirPurifierCleanMonitorStatusConstraintRangeInc = 25;
+static const uint16_t HeavenFresh_AirPurifierOdorDustAndAllergenContainerHints[] = { LAYOUT_HINT_HORIZONTAL_LINEAR };
+static const char* const HeavenFresh_AirPurifierOdorStatusSignature = "b";
+static const char* const HeavenFresh_AirPurifierOdorStatusLabel[] = { "ODOR" };
+static const uint16_t HeavenFresh_AirPurifierOdorStatusHints[] = { PROPERTY_WIDGET_HINT_CHECKBOX };
+static const char* const HeavenFresh_AirPurifierDustStatusSignature = "b";
+static const char* const HeavenFresh_AirPurifierDustStatusLabel[] = { "DUST" };
+static const uint16_t HeavenFresh_AirPurifierDustStatusHints[] = { PROPERTY_WIDGET_HINT_CHECKBOX };
+static const char* const HeavenFresh_AirPurifierAllergenStatusSignature = "b";
+static const char* const HeavenFresh_AirPurifierAllergenStatusLabel[] = { "ALLERGEN" };
+static const uint16_t HeavenFresh_AirPurifierAllergenStatusHints[] = { PROPERTY_WIDGET_HINT_CHECKBOX };
+static const uint16_t HeavenFresh_AirPurifierCleanMetalGridAndReplaceFilterContainerHints[] = { LAYOUT_HINT_HORIZONTAL_LINEAR };
+static const char* const HeavenFresh_AirPurifierCleanMetalGridStatusSignature = "b";
+static const char* const HeavenFresh_AirPurifierCleanMetalGridStatusLabel[] = { "CLEAN METAL GRID" };
+static const uint16_t HeavenFresh_AirPurifierCleanMetalGridStatusHints[] = { PROPERTY_WIDGET_HINT_CHECKBOX };
+static const char* const HeavenFresh_AirPurifierReplaceFilterStatusSignature = "b";
+static const char* const HeavenFresh_AirPurifierReplaceFilterStatusLabel[] = { "REPLACE FILTER" };
+static const uint16_t HeavenFresh_AirPurifierReplaceFilterStatusHints[] = { PROPERTY_WIDGET_HINT_CHECKBOX };
+static const char* const HeavenFresh_AirPurifierPowerAirPurifierLabel[] = { "POWER" };
+static const uint16_t HeavenFresh_AirPurifierPowerAirPurifierHints[] = { ACTION_WIDGET_HINT_ACTIONBUTTON };
+static const char* const HeavenFresh_AirPurifierResetAirPurifierLabel[] = { "RESET" };
+static const uint16_t HeavenFresh_AirPurifierResetAirPurifierHints[] = { ACTION_WIDGET_HINT_ACTIONBUTTON };
+
+
+void WidgetsInit()
+{
+    initializeContainerWidget(&HeavenFresh_AirPurifierAirPurifierController);
+    HeavenFresh_AirPurifierAirPurifierController.base.numLanguages = 1;
+    setBaseEnabled(&HeavenFresh_AirPurifierAirPurifierController.base, TRUE);
+
+    HeavenFresh_AirPurifierAirPurifierController.base.optParams.bgColor = 0x200;
+    HeavenFresh_AirPurifierAirPurifierController.base.optParams.label = HeavenFresh_AirPurifierAirPurifierControllerLabel;
+    HeavenFresh_AirPurifierAirPurifierController.base.optParams.hints = HeavenFresh_AirPurifierAirPurifierControllerHints;
+    HeavenFresh_AirPurifierAirPurifierController.base.optParams.numHints = 1;
+
+    initializePropertyWidget(&HeavenFresh_AirPurifierSelectFlow);
+    HeavenFresh_AirPurifierSelectFlow.base.numLanguages = 1;
+    setBaseEnabled(&HeavenFresh_AirPurifierSelectFlow.base, TRUE);
+    setBaseWritable(&HeavenFresh_AirPurifierSelectFlow.base, TRUE);
+
+    HeavenFresh_AirPurifierSelectFlow.signature = HeavenFresh_AirPurifierSelectFlowSignature;
+    HeavenFresh_AirPurifierSelectFlow.propertyType = SINGLE_VALUE_PROPERTY;
+    HeavenFresh_AirPurifierSelectFlow.getValue = &getFlowStatus;
+
+    HeavenFresh_AirPurifierSelectFlow.base.optParams.bgColor = 0x500;
+    HeavenFresh_AirPurifierSelectFlow.base.optParams.label = HeavenFresh_AirPurifierSelectFlowLabel;
+    HeavenFresh_AirPurifierSelectFlow.base.optParams.hints = HeavenFresh_AirPurifierSelectFlowHints;
+    HeavenFresh_AirPurifierSelectFlow.base.optParams.numHints = 1;
+
+    HeavenFresh_AirPurifierSelectFlow.optParams.numConstraints = 5;
+    HeavenFresh_AirPurifierSelectFlow.optParams.constraintList = HeavenFresh_AirPurifierSelectFlowConstraintList;
+    HeavenFresh_AirPurifierSelectFlow.optParams.constraintList[0].value = &HeavenFresh_AirPurifierSelectFlowConstraintValue0;
+    HeavenFresh_AirPurifierSelectFlow.optParams.constraintList[0].display = HeavenFresh_AirPurifierSelectFlowDisplay0;
+    HeavenFresh_AirPurifierSelectFlow.optParams.constraintList[1].value = &HeavenFresh_AirPurifierSelectFlowConstraintValue1;
+    HeavenFresh_AirPurifierSelectFlow.optParams.constraintList[1].display = HeavenFresh_AirPurifierSelectFlowDisplay1;
+    HeavenFresh_AirPurifierSelectFlow.optParams.constraintList[2].value = &HeavenFresh_AirPurifierSelectFlowConstraintValue2;
+    HeavenFresh_AirPurifierSelectFlow.optParams.constraintList[2].display = HeavenFresh_AirPurifierSelectFlowDisplay2;
+    HeavenFresh_AirPurifierSelectFlow.optParams.constraintList[3].value = &HeavenFresh_AirPurifierSelectFlowConstraintValue3;
+    HeavenFresh_AirPurifierSelectFlow.optParams.constraintList[3].display = HeavenFresh_AirPurifierSelectFlowDisplay3;
+    HeavenFresh_AirPurifierSelectFlow.optParams.constraintList[4].value = &HeavenFresh_AirPurifierSelectFlowConstraintValue4;
+    HeavenFresh_AirPurifierSelectFlow.optParams.constraintList[4].display = HeavenFresh_AirPurifierSelectFlowDisplay4;
+
+    initializePropertyWidget(&HeavenFresh_AirPurifierSelectTimer);
+    HeavenFresh_AirPurifierSelectTimer.base.numLanguages = 1;
+    setBaseEnabled(&HeavenFresh_AirPurifierSelectTimer.base, TRUE);
+    setBaseWritable(&HeavenFresh_AirPurifierSelectTimer.base, TRUE);
+
+    HeavenFresh_AirPurifierSelectTimer.signature = HeavenFresh_AirPurifierSelectTimerSignature;
+    HeavenFresh_AirPurifierSelectTimer.propertyType = SINGLE_VALUE_PROPERTY;
+    HeavenFresh_AirPurifierSelectTimer.getValue = &getTimerStatus;
+
+    HeavenFresh_AirPurifierSelectTimer.base.optParams.bgColor = 0x500;
+    HeavenFresh_AirPurifierSelectTimer.base.optParams.label = HeavenFresh_AirPurifierSelectTimerLabel;
+    HeavenFresh_AirPurifierSelectTimer.base.optParams.hints = HeavenFresh_AirPurifierSelectTimerHints;
+    HeavenFresh_AirPurifierSelectTimer.base.optParams.numHints = 1;
+
+    HeavenFresh_AirPurifierSelectTimer.optParams.numConstraints = 3;
+    HeavenFresh_AirPurifierSelectTimer.optParams.constraintList = HeavenFresh_AirPurifierSelectTimerConstraintList;
+    HeavenFresh_AirPurifierSelectTimer.optParams.constraintList[0].value = &HeavenFresh_AirPurifierSelectTimerConstraintValue0;
+    HeavenFresh_AirPurifierSelectTimer.optParams.constraintList[0].display = HeavenFresh_AirPurifierSelectTimerDisplay0;
+    HeavenFresh_AirPurifierSelectTimer.optParams.constraintList[1].value = &HeavenFresh_AirPurifierSelectTimerConstraintValue1;
+    HeavenFresh_AirPurifierSelectTimer.optParams.constraintList[1].display = HeavenFresh_AirPurifierSelectTimerDisplay1;
+    HeavenFresh_AirPurifierSelectTimer.optParams.constraintList[2].value = &HeavenFresh_AirPurifierSelectTimerConstraintValue2;
+    HeavenFresh_AirPurifierSelectTimer.optParams.constraintList[2].display = HeavenFresh_AirPurifierSelectTimerDisplay2;
+
+    initializePropertyWidget(&HeavenFresh_AirPurifierCleanMonitorStatus);
+    HeavenFresh_AirPurifierCleanMonitorStatus.base.numLanguages = 1;
+    setBaseEnabled(&HeavenFresh_AirPurifierCleanMonitorStatus.base, FALSE);
+    setBaseWritable(&HeavenFresh_AirPurifierCleanMonitorStatus.base, FALSE);
+
+    HeavenFresh_AirPurifierCleanMonitorStatus.signature = HeavenFresh_AirPurifierCleanMonitorStatusSignature;
+    HeavenFresh_AirPurifierCleanMonitorStatus.propertyType = SINGLE_VALUE_PROPERTY;
+    HeavenFresh_AirPurifierCleanMonitorStatus.getValue = &getCleanMonitorStatus;
+
+    HeavenFresh_AirPurifierCleanMonitorStatus.base.optParams.bgColor = 0x500;
+    HeavenFresh_AirPurifierCleanMonitorStatus.base.optParams.label = HeavenFresh_AirPurifierCleanMonitorStatusLabel;
+    HeavenFresh_AirPurifierCleanMonitorStatus.base.optParams.hints = HeavenFresh_AirPurifierCleanMonitorStatusHints;
+    HeavenFresh_AirPurifierCleanMonitorStatus.base.optParams.numHints = 1;
+
+    HeavenFresh_AirPurifierCleanMonitorStatus.optParams.constraintRangeDefined = TRUE;
+    HeavenFresh_AirPurifierCleanMonitorStatus.optParams.constraintRange.minValue = &HeavenFresh_AirPurifierCleanMonitorStatusConstraintRangeMin;
+    HeavenFresh_AirPurifierCleanMonitorStatus.optParams.constraintRange.maxValue = &HeavenFresh_AirPurifierCleanMonitorStatusConstraintRangeMax;
+    HeavenFresh_AirPurifierCleanMonitorStatus.optParams.constraintRange.increment = &HeavenFresh_AirPurifierCleanMonitorStatusConstraintRangeInc;
+
+    initializeContainerWidget(&HeavenFresh_AirPurifierOdorDustAndAllergenContainer);
+    HeavenFresh_AirPurifierOdorDustAndAllergenContainer.base.numLanguages = 1;
+    setBaseEnabled(&HeavenFresh_AirPurifierOdorDustAndAllergenContainer.base, TRUE);
+
+    HeavenFresh_AirPurifierOdorDustAndAllergenContainer.base.optParams.bgColor = 0x200;
+    HeavenFresh_AirPurifierOdorDustAndAllergenContainer.base.optParams.hints = HeavenFresh_AirPurifierOdorDustAndAllergenContainerHints;
+    HeavenFresh_AirPurifierOdorDustAndAllergenContainer.base.optParams.numHints = 1;
+
+    initializePropertyWidget(&HeavenFresh_AirPurifierOdorStatus);
+    HeavenFresh_AirPurifierOdorStatus.base.numLanguages = 1;
+    setBaseEnabled(&HeavenFresh_AirPurifierOdorStatus.base, TRUE);
+    setBaseWritable(&HeavenFresh_AirPurifierOdorStatus.base, TRUE);
+
+    HeavenFresh_AirPurifierOdorStatus.signature = HeavenFresh_AirPurifierOdorStatusSignature;
+    HeavenFresh_AirPurifierOdorStatus.propertyType = SINGLE_VALUE_PROPERTY;
+    HeavenFresh_AirPurifierOdorStatus.getValue = &getOdorStatus;
+
+    HeavenFresh_AirPurifierOdorStatus.base.optParams.label = HeavenFresh_AirPurifierOdorStatusLabel;
+    HeavenFresh_AirPurifierOdorStatus.base.optParams.hints = HeavenFresh_AirPurifierOdorStatusHints;
+    HeavenFresh_AirPurifierOdorStatus.base.optParams.numHints = 1;
+
+    initializePropertyWidget(&HeavenFresh_AirPurifierDustStatus);
+    HeavenFresh_AirPurifierDustStatus.base.numLanguages = 1;
+    setBaseEnabled(&HeavenFresh_AirPurifierDustStatus.base, TRUE);
+    setBaseWritable(&HeavenFresh_AirPurifierDustStatus.base, TRUE);
+
+    HeavenFresh_AirPurifierDustStatus.signature = HeavenFresh_AirPurifierDustStatusSignature;
+    HeavenFresh_AirPurifierDustStatus.propertyType = SINGLE_VALUE_PROPERTY;
+    HeavenFresh_AirPurifierDustStatus.getValue = &getDustStatus;
+
+    HeavenFresh_AirPurifierDustStatus.base.optParams.label = HeavenFresh_AirPurifierDustStatusLabel;
+    HeavenFresh_AirPurifierDustStatus.base.optParams.hints = HeavenFresh_AirPurifierDustStatusHints;
+    HeavenFresh_AirPurifierDustStatus.base.optParams.numHints = 1;
+
+    initializePropertyWidget(&HeavenFresh_AirPurifierAllergenStatus);
+    HeavenFresh_AirPurifierAllergenStatus.base.numLanguages = 1;
+    setBaseEnabled(&HeavenFresh_AirPurifierAllergenStatus.base, TRUE);
+    setBaseWritable(&HeavenFresh_AirPurifierAllergenStatus.base, TRUE);
+
+    HeavenFresh_AirPurifierAllergenStatus.signature = HeavenFresh_AirPurifierAllergenStatusSignature;
+    HeavenFresh_AirPurifierAllergenStatus.propertyType = SINGLE_VALUE_PROPERTY;
+    HeavenFresh_AirPurifierAllergenStatus.getValue = &getAllergenStatus;
+
+    HeavenFresh_AirPurifierAllergenStatus.base.optParams.label = HeavenFresh_AirPurifierAllergenStatusLabel;
+    HeavenFresh_AirPurifierAllergenStatus.base.optParams.hints = HeavenFresh_AirPurifierAllergenStatusHints;
+    HeavenFresh_AirPurifierAllergenStatus.base.optParams.numHints = 1;
+
+    initializeContainerWidget(&HeavenFresh_AirPurifierCleanMetalGridAndReplaceFilterContainer);
+    HeavenFresh_AirPurifierCleanMetalGridAndReplaceFilterContainer.base.numLanguages = 1;
+    setBaseEnabled(&HeavenFresh_AirPurifierCleanMetalGridAndReplaceFilterContainer.base, TRUE);
+
+    HeavenFresh_AirPurifierCleanMetalGridAndReplaceFilterContainer.base.optParams.bgColor = 0x200;
+    HeavenFresh_AirPurifierCleanMetalGridAndReplaceFilterContainer.base.optParams.hints = HeavenFresh_AirPurifierCleanMetalGridAndReplaceFilterContainerHints;
+    HeavenFresh_AirPurifierCleanMetalGridAndReplaceFilterContainer.base.optParams.numHints = 1;
+
+    initializePropertyWidget(&HeavenFresh_AirPurifierCleanMetalGridStatus);
+    HeavenFresh_AirPurifierCleanMetalGridStatus.base.numLanguages = 1;
+    setBaseEnabled(&HeavenFresh_AirPurifierCleanMetalGridStatus.base, TRUE);
+    setBaseWritable(&HeavenFresh_AirPurifierCleanMetalGridStatus.base, TRUE);
+
+    HeavenFresh_AirPurifierCleanMetalGridStatus.signature = HeavenFresh_AirPurifierCleanMetalGridStatusSignature;
+    HeavenFresh_AirPurifierCleanMetalGridStatus.propertyType = SINGLE_VALUE_PROPERTY;
+    HeavenFresh_AirPurifierCleanMetalGridStatus.getValue = &getCleanMetalGridStatus;
+
+    HeavenFresh_AirPurifierCleanMetalGridStatus.base.optParams.label = HeavenFresh_AirPurifierCleanMetalGridStatusLabel;
+    HeavenFresh_AirPurifierCleanMetalGridStatus.base.optParams.hints = HeavenFresh_AirPurifierCleanMetalGridStatusHints;
+    HeavenFresh_AirPurifierCleanMetalGridStatus.base.optParams.numHints = 1;
+
+    initializePropertyWidget(&HeavenFresh_AirPurifierReplaceFilterStatus);
+    HeavenFresh_AirPurifierReplaceFilterStatus.base.numLanguages = 1;
+    setBaseEnabled(&HeavenFresh_AirPurifierReplaceFilterStatus.base, TRUE);
+    setBaseWritable(&HeavenFresh_AirPurifierReplaceFilterStatus.base, TRUE);
+
+    HeavenFresh_AirPurifierReplaceFilterStatus.signature = HeavenFresh_AirPurifierReplaceFilterStatusSignature;
+    HeavenFresh_AirPurifierReplaceFilterStatus.propertyType = SINGLE_VALUE_PROPERTY;
+    HeavenFresh_AirPurifierReplaceFilterStatus.getValue = &getReplaceFilterStatus;
+
+    HeavenFresh_AirPurifierReplaceFilterStatus.base.optParams.label = HeavenFresh_AirPurifierReplaceFilterStatusLabel;
+    HeavenFresh_AirPurifierReplaceFilterStatus.base.optParams.hints = HeavenFresh_AirPurifierReplaceFilterStatusHints;
+    HeavenFresh_AirPurifierReplaceFilterStatus.base.optParams.numHints = 1;
+
+    initializeActionWidget(&HeavenFresh_AirPurifierPowerAirPurifier);
+    HeavenFresh_AirPurifierPowerAirPurifier.base.numLanguages = 1;
+    setBaseEnabled(&HeavenFresh_AirPurifierPowerAirPurifier.base, TRUE);
+
+    HeavenFresh_AirPurifierPowerAirPurifier.base.optParams.bgColor = 0x400;
+    HeavenFresh_AirPurifierPowerAirPurifier.base.optParams.label = HeavenFresh_AirPurifierPowerAirPurifierLabel;
+    HeavenFresh_AirPurifierPowerAirPurifier.base.optParams.hints = HeavenFresh_AirPurifierPowerAirPurifierHints;
+    HeavenFresh_AirPurifierPowerAirPurifier.base.optParams.numHints = 1;
+
+    initializeActionWidget(&HeavenFresh_AirPurifierResetAirPurifier);
+    HeavenFresh_AirPurifierResetAirPurifier.base.numLanguages = 1;
+    setBaseEnabled(&HeavenFresh_AirPurifierResetAirPurifier.base, TRUE);
+
+    HeavenFresh_AirPurifierResetAirPurifier.base.optParams.bgColor = 0x400;
+    HeavenFresh_AirPurifierResetAirPurifier.base.optParams.label = HeavenFresh_AirPurifierResetAirPurifierLabel;
+    HeavenFresh_AirPurifierResetAirPurifier.base.optParams.hints = HeavenFresh_AirPurifierResetAirPurifierHints;
+    HeavenFresh_AirPurifierResetAirPurifier.base.optParams.numHints = 1;
+
+    return;
+}
+
+void* IdentifyMsgOrPropId(uint32_t identifier, uint16_t* widgetType, uint16_t* propType, uint16_t* language)
+{
+    switch (identifier) {
+    case EN_HEAVENFRESH_AIRPURIFIER_AIRPURIFIERCONTROLLER_GET_ALL_VALUES:
+        *widgetType = WIDGET_TYPE_CONTAINER;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierAirPurifierController;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_AIRPURIFIERCONTROLLER_VERSION_PROPERTY:
+        *widgetType = WIDGET_TYPE_CONTAINER;
+        *propType = PROPERTY_TYPE_VERSION;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierAirPurifierController;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_AIRPURIFIERCONTROLLER_STATES_PROPERTY:
+        *widgetType = WIDGET_TYPE_CONTAINER;
+        *propType = PROPERTY_TYPE_STATES;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierAirPurifierController;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_AIRPURIFIERCONTROLLER_OPTPARAMS_PROPERTY:
+        *widgetType = WIDGET_TYPE_CONTAINER;
+        *propType = PROPERTY_TYPE_OPTPARAMS;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierAirPurifierController;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_SELECTFLOW_GET_ALL_VALUES:
+        *widgetType = WIDGET_TYPE_PROPERTY;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierSelectFlow;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_SELECTFLOW_VERSION_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
+        *propType = PROPERTY_TYPE_VERSION;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierSelectFlow;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_SELECTFLOW_STATES_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
+        *propType = PROPERTY_TYPE_STATES;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierSelectFlow;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_SELECTFLOW_OPTPARAMS_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
+        *propType = PROPERTY_TYPE_OPTPARAMS;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierSelectFlow;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_SELECTFLOW_VALUE_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
+        *propType = PROPERTY_TYPE_VALUE;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierSelectFlow;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_SELECTTIMER_GET_ALL_VALUES:
+        *widgetType = WIDGET_TYPE_PROPERTY;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierSelectTimer;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_SELECTTIMER_VERSION_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
+        *propType = PROPERTY_TYPE_VERSION;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierSelectTimer;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_SELECTTIMER_STATES_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
+        *propType = PROPERTY_TYPE_STATES;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierSelectTimer;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_SELECTTIMER_OPTPARAMS_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
+        *propType = PROPERTY_TYPE_OPTPARAMS;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierSelectTimer;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_SELECTTIMER_VALUE_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
+        *propType = PROPERTY_TYPE_VALUE;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierSelectTimer;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_CLEANMONITORSTATUS_GET_ALL_VALUES:
+        *widgetType = WIDGET_TYPE_PROPERTY;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierCleanMonitorStatus;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_CLEANMONITORSTATUS_VERSION_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
+        *propType = PROPERTY_TYPE_VERSION;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierCleanMonitorStatus;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_CLEANMONITORSTATUS_STATES_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
+        *propType = PROPERTY_TYPE_STATES;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierCleanMonitorStatus;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_CLEANMONITORSTATUS_OPTPARAMS_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
+        *propType = PROPERTY_TYPE_OPTPARAMS;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierCleanMonitorStatus;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_CLEANMONITORSTATUS_VALUE_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
+        *propType = PROPERTY_TYPE_VALUE;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierCleanMonitorStatus;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_ODORDUSTANDALLERGENCONTAINER_GET_ALL_VALUES:
+        *widgetType = WIDGET_TYPE_CONTAINER;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierOdorDustAndAllergenContainer;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_ODORDUSTANDALLERGENCONTAINER_VERSION_PROPERTY:
+        *widgetType = WIDGET_TYPE_CONTAINER;
+        *propType = PROPERTY_TYPE_VERSION;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierOdorDustAndAllergenContainer;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_ODORDUSTANDALLERGENCONTAINER_STATES_PROPERTY:
+        *widgetType = WIDGET_TYPE_CONTAINER;
+        *propType = PROPERTY_TYPE_STATES;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierOdorDustAndAllergenContainer;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_ODORDUSTANDALLERGENCONTAINER_OPTPARAMS_PROPERTY:
+        *widgetType = WIDGET_TYPE_CONTAINER;
+        *propType = PROPERTY_TYPE_OPTPARAMS;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierOdorDustAndAllergenContainer;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_ODORSTATUS_GET_ALL_VALUES:
+        *widgetType = WIDGET_TYPE_PROPERTY;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierOdorStatus;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_ODORSTATUS_VERSION_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
+        *propType = PROPERTY_TYPE_VERSION;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierOdorStatus;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_ODORSTATUS_STATES_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
+        *propType = PROPERTY_TYPE_STATES;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierOdorStatus;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_ODORSTATUS_OPTPARAMS_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
+        *propType = PROPERTY_TYPE_OPTPARAMS;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierOdorStatus;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_ODORSTATUS_VALUE_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
+        *propType = PROPERTY_TYPE_VALUE;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierOdorStatus;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_DUSTSTATUS_GET_ALL_VALUES:
+        *widgetType = WIDGET_TYPE_PROPERTY;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierDustStatus;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_DUSTSTATUS_VERSION_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
+        *propType = PROPERTY_TYPE_VERSION;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierDustStatus;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_DUSTSTATUS_STATES_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
+        *propType = PROPERTY_TYPE_STATES;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierDustStatus;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_DUSTSTATUS_OPTPARAMS_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
+        *propType = PROPERTY_TYPE_OPTPARAMS;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierDustStatus;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_DUSTSTATUS_VALUE_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
+        *propType = PROPERTY_TYPE_VALUE;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierDustStatus;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_ALLERGENSTATUS_GET_ALL_VALUES:
+        *widgetType = WIDGET_TYPE_PROPERTY;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierAllergenStatus;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_ALLERGENSTATUS_VERSION_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
+        *propType = PROPERTY_TYPE_VERSION;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierAllergenStatus;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_ALLERGENSTATUS_STATES_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
+        *propType = PROPERTY_TYPE_STATES;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierAllergenStatus;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_ALLERGENSTATUS_OPTPARAMS_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
+        *propType = PROPERTY_TYPE_OPTPARAMS;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierAllergenStatus;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_ALLERGENSTATUS_VALUE_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
+        *propType = PROPERTY_TYPE_VALUE;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierAllergenStatus;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_CLEANMETALGRIDANDREPLACEFILTERCONTAINER_GET_ALL_VALUES:
+        *widgetType = WIDGET_TYPE_CONTAINER;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierCleanMetalGridAndReplaceFilterContainer;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_CLEANMETALGRIDANDREPLACEFILTERCONTAINER_VERSION_PROPERTY:
+        *widgetType = WIDGET_TYPE_CONTAINER;
+        *propType = PROPERTY_TYPE_VERSION;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierCleanMetalGridAndReplaceFilterContainer;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_CLEANMETALGRIDANDREPLACEFILTERCONTAINER_STATES_PROPERTY:
+        *widgetType = WIDGET_TYPE_CONTAINER;
+        *propType = PROPERTY_TYPE_STATES;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierCleanMetalGridAndReplaceFilterContainer;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_CLEANMETALGRIDANDREPLACEFILTERCONTAINER_OPTPARAMS_PROPERTY:
+        *widgetType = WIDGET_TYPE_CONTAINER;
+        *propType = PROPERTY_TYPE_OPTPARAMS;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierCleanMetalGridAndReplaceFilterContainer;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_CLEANMETALGRIDSTATUS_GET_ALL_VALUES:
+        *widgetType = WIDGET_TYPE_PROPERTY;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierCleanMetalGridStatus;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_CLEANMETALGRIDSTATUS_VERSION_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
+        *propType = PROPERTY_TYPE_VERSION;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierCleanMetalGridStatus;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_CLEANMETALGRIDSTATUS_STATES_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
+        *propType = PROPERTY_TYPE_STATES;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierCleanMetalGridStatus;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_CLEANMETALGRIDSTATUS_OPTPARAMS_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
+        *propType = PROPERTY_TYPE_OPTPARAMS;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierCleanMetalGridStatus;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_CLEANMETALGRIDSTATUS_VALUE_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
+        *propType = PROPERTY_TYPE_VALUE;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierCleanMetalGridStatus;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_REPLACEFILTERSTATUS_GET_ALL_VALUES:
+        *widgetType = WIDGET_TYPE_PROPERTY;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierReplaceFilterStatus;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_REPLACEFILTERSTATUS_VERSION_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
+        *propType = PROPERTY_TYPE_VERSION;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierReplaceFilterStatus;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_REPLACEFILTERSTATUS_STATES_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
+        *propType = PROPERTY_TYPE_STATES;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierReplaceFilterStatus;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_REPLACEFILTERSTATUS_OPTPARAMS_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
+        *propType = PROPERTY_TYPE_OPTPARAMS;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierReplaceFilterStatus;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_REPLACEFILTERSTATUS_VALUE_PROPERTY:
+        *widgetType = WIDGET_TYPE_PROPERTY;
+        *propType = PROPERTY_TYPE_VALUE;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierReplaceFilterStatus;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_POWERAIRPURIFIER_GET_ALL_VALUES:
+        *widgetType = WIDGET_TYPE_ACTION;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierPowerAirPurifier;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_POWERAIRPURIFIER_VERSION_PROPERTY:
+        *widgetType = WIDGET_TYPE_ACTION;
+        *propType = PROPERTY_TYPE_VERSION;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierPowerAirPurifier;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_POWERAIRPURIFIER_STATES_PROPERTY:
+        *widgetType = WIDGET_TYPE_ACTION;
+        *propType = PROPERTY_TYPE_STATES;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierPowerAirPurifier;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_POWERAIRPURIFIER_OPTPARAMS_PROPERTY:
+        *widgetType = WIDGET_TYPE_ACTION;
+        *propType = PROPERTY_TYPE_OPTPARAMS;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierPowerAirPurifier;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_RESETAIRPURIFIER_GET_ALL_VALUES:
+        *widgetType = WIDGET_TYPE_ACTION;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierResetAirPurifier;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_RESETAIRPURIFIER_VERSION_PROPERTY:
+        *widgetType = WIDGET_TYPE_ACTION;
+        *propType = PROPERTY_TYPE_VERSION;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierResetAirPurifier;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_RESETAIRPURIFIER_STATES_PROPERTY:
+        *widgetType = WIDGET_TYPE_ACTION;
+        *propType = PROPERTY_TYPE_STATES;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierResetAirPurifier;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_RESETAIRPURIFIER_OPTPARAMS_PROPERTY:
+        *widgetType = WIDGET_TYPE_ACTION;
+        *propType = PROPERTY_TYPE_OPTPARAMS;
+        *language = HEAVENFRESH_AIRPURIFIER_MYLANGUAGES_EN;
+        return &HeavenFresh_AirPurifierResetAirPurifier;
+
+    default:
+        return FALSE;
+    }
+}
+
+void* IdentifyMsgOrPropIdForSignal(uint32_t identifier, uint8_t* isProperty)
+{
+    switch (identifier) {
+    case EN_HEAVENFRESH_AIRPURIFIER_AIRPURIFIERCONTROLLER_SIGNAL_PROPERTIES_CHANGED:
+        return &HeavenFresh_AirPurifierAirPurifierController;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_SELECTFLOW_SIGNAL_PROPERTIES_CHANGED:
+        return &HeavenFresh_AirPurifierSelectFlow;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_SELECTFLOW_SIGNAL_VALUE_CHANGED:
+        *isProperty = TRUE;
+        return &HeavenFresh_AirPurifierSelectFlow;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_SELECTTIMER_SIGNAL_PROPERTIES_CHANGED:
+        return &HeavenFresh_AirPurifierSelectTimer;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_SELECTTIMER_SIGNAL_VALUE_CHANGED:
+        *isProperty = TRUE;
+        return &HeavenFresh_AirPurifierSelectTimer;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_CLEANMONITORSTATUS_SIGNAL_PROPERTIES_CHANGED:
+        return &HeavenFresh_AirPurifierCleanMonitorStatus;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_CLEANMONITORSTATUS_SIGNAL_VALUE_CHANGED:
+        *isProperty = TRUE;
+        return &HeavenFresh_AirPurifierCleanMonitorStatus;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_ODORDUSTANDALLERGENCONTAINER_SIGNAL_PROPERTIES_CHANGED:
+        return &HeavenFresh_AirPurifierOdorDustAndAllergenContainer;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_ODORSTATUS_SIGNAL_PROPERTIES_CHANGED:
+        return &HeavenFresh_AirPurifierOdorStatus;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_ODORSTATUS_SIGNAL_VALUE_CHANGED:
+        *isProperty = TRUE;
+        return &HeavenFresh_AirPurifierOdorStatus;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_DUSTSTATUS_SIGNAL_PROPERTIES_CHANGED:
+        return &HeavenFresh_AirPurifierDustStatus;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_DUSTSTATUS_SIGNAL_VALUE_CHANGED:
+        *isProperty = TRUE;
+        return &HeavenFresh_AirPurifierDustStatus;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_ALLERGENSTATUS_SIGNAL_PROPERTIES_CHANGED:
+        return &HeavenFresh_AirPurifierAllergenStatus;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_ALLERGENSTATUS_SIGNAL_VALUE_CHANGED:
+        *isProperty = TRUE;
+        return &HeavenFresh_AirPurifierAllergenStatus;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_CLEANMETALGRIDANDREPLACEFILTERCONTAINER_SIGNAL_PROPERTIES_CHANGED:
+        return &HeavenFresh_AirPurifierCleanMetalGridAndReplaceFilterContainer;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_CLEANMETALGRIDSTATUS_SIGNAL_PROPERTIES_CHANGED:
+        return &HeavenFresh_AirPurifierCleanMetalGridStatus;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_CLEANMETALGRIDSTATUS_SIGNAL_VALUE_CHANGED:
+        *isProperty = TRUE;
+        return &HeavenFresh_AirPurifierCleanMetalGridStatus;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_REPLACEFILTERSTATUS_SIGNAL_PROPERTIES_CHANGED:
+        return &HeavenFresh_AirPurifierReplaceFilterStatus;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_REPLACEFILTERSTATUS_SIGNAL_VALUE_CHANGED:
+        *isProperty = TRUE;
+        return &HeavenFresh_AirPurifierReplaceFilterStatus;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_POWERAIRPURIFIER_SIGNAL_PROPERTIES_CHANGED:
+        return &HeavenFresh_AirPurifierPowerAirPurifier;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_RESETAIRPURIFIER_SIGNAL_PROPERTIES_CHANGED:
+        return &HeavenFresh_AirPurifierResetAirPurifier;
+
+    default:
+        return FALSE;
+    }
+}
+
+uint8_t IdentifyRootMsgOrPropId(uint32_t identifier)
+{
+    switch (identifier) {
+    case HEAVENFRESH_AIRPURIFIER_ROOT_CONTROLPANEL_AIRPURIFIERCONTROLLER_VERSION_PROPERTY:
+    case HEAVENFRESH_AIRPURIFIER_ROOT_CONTROLPANEL_AIRPURIFIERCONTROLLER_GET_ALL_VALUES:
+        return TRUE;
+
+    default:
+        return FALSE;
+    }
+}
+
+AJ_Status SetValueProperty(AJ_Message* replyMsg, uint32_t propId, void* context)
+{
+    AJ_Status status = AJ_ERR_UNEXPECTED;
+
+    const char* variantSig;
+    AJ_UnmarshalVariant(replyMsg, &variantSig);
+
+    switch (propId) {
+    case EN_HEAVENFRESH_AIRPURIFIER_SELECTFLOW_VALUE_PROPERTY:
+        {
+            uint16_t newValue;
+            status = unmarshalPropertyValue(&HeavenFresh_AirPurifierSelectFlow, replyMsg, &newValue, ((SetValueContext*)context)->sender);
+            if (status != AJ_OK) {
+                return status;
+            }
+            setFlowStatus(newValue);
+            ((SetValueContext*)context)->numSignals = 1;
+            ((SetValueContext*)context)->signals[0] = EN_HEAVENFRESH_AIRPURIFIER_SELECTFLOW_SIGNAL_VALUE_CHANGED;
+        }
+        break;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_SELECTTIMER_VALUE_PROPERTY:
+        {
+            uint16_t newValue;
+            status = unmarshalPropertyValue(&HeavenFresh_AirPurifierSelectTimer, replyMsg, &newValue, ((SetValueContext*)context)->sender);
+            if (status != AJ_OK) {
+                return status;
+            }
+            setTimerStatus(newValue);
+            ((SetValueContext*)context)->numSignals = 1;
+            ((SetValueContext*)context)->signals[0] = EN_HEAVENFRESH_AIRPURIFIER_SELECTTIMER_SIGNAL_VALUE_CHANGED;
+        }
+        break;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_CLEANMONITORSTATUS_VALUE_PROPERTY:
+        {
+            uint16_t newValue;
+            status = unmarshalPropertyValue(&HeavenFresh_AirPurifierCleanMonitorStatus, replyMsg, &newValue, ((SetValueContext*)context)->sender);
+            if (status != AJ_OK) {
+                return status;
+            }
+            setCleanMonitorStatus(newValue);
+            ((SetValueContext*)context)->numSignals = 1;
+            ((SetValueContext*)context)->signals[0] = EN_HEAVENFRESH_AIRPURIFIER_CLEANMONITORSTATUS_SIGNAL_VALUE_CHANGED;
+        }
+        break;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_ODORSTATUS_VALUE_PROPERTY:
+        {
+            uint32_t newValue;
+            status = unmarshalPropertyValue(&HeavenFresh_AirPurifierOdorStatus, replyMsg, &newValue, ((SetValueContext*)context)->sender);
+            if (status != AJ_OK) {
+                return status;
+            }
+            setOdorStatus(newValue);
+            ((SetValueContext*)context)->numSignals = 1;
+            ((SetValueContext*)context)->signals[0] = EN_HEAVENFRESH_AIRPURIFIER_ODORSTATUS_SIGNAL_VALUE_CHANGED;
+        }
+        break;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_DUSTSTATUS_VALUE_PROPERTY:
+        {
+            uint32_t newValue;
+            status = unmarshalPropertyValue(&HeavenFresh_AirPurifierDustStatus, replyMsg, &newValue, ((SetValueContext*)context)->sender);
+            if (status != AJ_OK) {
+                return status;
+            }
+            setDustStatus(newValue);
+            ((SetValueContext*)context)->numSignals = 1;
+            ((SetValueContext*)context)->signals[0] = EN_HEAVENFRESH_AIRPURIFIER_DUSTSTATUS_SIGNAL_VALUE_CHANGED;
+        }
+        break;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_ALLERGENSTATUS_VALUE_PROPERTY:
+        {
+            uint32_t newValue;
+            status = unmarshalPropertyValue(&HeavenFresh_AirPurifierAllergenStatus, replyMsg, &newValue, ((SetValueContext*)context)->sender);
+            if (status != AJ_OK) {
+                return status;
+            }
+            setAllergenStatus(newValue);
+            ((SetValueContext*)context)->numSignals = 1;
+            ((SetValueContext*)context)->signals[0] = EN_HEAVENFRESH_AIRPURIFIER_ALLERGENSTATUS_SIGNAL_VALUE_CHANGED;
+        }
+        break;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_CLEANMETALGRIDSTATUS_VALUE_PROPERTY:
+        {
+            uint32_t newValue;
+            status = unmarshalPropertyValue(&HeavenFresh_AirPurifierCleanMetalGridStatus, replyMsg, &newValue, ((SetValueContext*)context)->sender);
+            if (status != AJ_OK) {
+                return status;
+            }
+            setCleanMetalGridStatus(newValue);
+            ((SetValueContext*)context)->numSignals = 1;
+            ((SetValueContext*)context)->signals[0] = EN_HEAVENFRESH_AIRPURIFIER_CLEANMETALGRIDSTATUS_SIGNAL_VALUE_CHANGED;
+        }
+        break;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_REPLACEFILTERSTATUS_VALUE_PROPERTY:
+        {
+            uint32_t newValue;
+            status = unmarshalPropertyValue(&HeavenFresh_AirPurifierReplaceFilterStatus, replyMsg, &newValue, ((SetValueContext*)context)->sender);
+            if (status != AJ_OK) {
+                return status;
+            }
+            setReplaceFilterStatus(newValue);
+            ((SetValueContext*)context)->numSignals = 1;
+            ((SetValueContext*)context)->signals[0] = EN_HEAVENFRESH_AIRPURIFIER_REPLACEFILTERSTATUS_SIGNAL_VALUE_CHANGED;
+        }
+        break;
+
+
+    }
+
+    return status;
+}
+
+AJ_Status ExecuteAction(AJ_Message* msg, uint32_t msgId, ExecuteActionContext* context)
+{
+    AJ_Message reply;
+    AJ_MarshalReplyMsg(msg, &reply);
+
+    switch (msgId) {
+    case EN_HEAVENFRESH_AIRPURIFIER_POWERAIRPURIFIER_EXEC:
+        {
+            powerAirPurifier();
+        }
+        break;
+
+    case EN_HEAVENFRESH_AIRPURIFIER_RESETAIRPURIFIER_EXEC:
+        {
+            resetAirPurifier();
+        }
+        break;
+
+
+    }
+
+    return AJ_DeliverMsg(&reply);
+}
+
+void TestsInit(CPSTest* testsToRun)
+{
+
+}
+
+AJSVC_ServiceStatus GeneratedMessageProcessor(AJ_BusAttachment* bus, AJ_Message* msg, AJ_Status* msgStatus)
+{
+    AJSVC_ServiceStatus AJSVC_ServiceStatus = AJSVC_SERVICE_STATUS_HANDLED;
+
+    switch (msg->msgId) {
+        GET_WIDGET_VALUE_CASES
+        *msgStatus = AJ_BusPropGet(msg, AJCPS_GetWidgetProperty, NULL);
+        break;
+
+        GET_WIDGET_ALL_VALUE_CASES
+        *msgStatus = AJCPS_GetAllWidgetProperties(msg, msg->msgId);
+        break;
+
+        GET_ROOT_VALUE_CASES
+        *msgStatus = AJ_BusPropGet(msg, AJCPS_GetRootProperty, NULL);
+        break;
+
+        GET_ROOT_ALL_VALUE_CASES
+        *msgStatus = AJCPS_GetAllRootProperties(msg, msg->msgId);
+        break;
+
+        SET_VALUE_CASES
+        {
+            SetValueContext context;
+            context.sender = msg->sender;
+            context.numSignals = 0;
+            *msgStatus = AJ_BusPropSet(msg, SetValueProperty, &context);
+            if (*msgStatus == AJ_OK && context.numSignals != 0) {
+                uint16_t indx;
+                for (indx = 0; indx < context.numSignals; indx++) {
+                    *msgStatus = AJCPS_SendPropertyChangedSignal(bus, context.signals[indx], AJCPS_GetCurrentSessionId());
+                }
+            }
+        }
+        break;
+
+        ACTION_CASES
+        {
+            ExecuteActionContext context;
+            context.numSignals = 0;
+            *msgStatus = ExecuteAction(msg, msg->msgId, &context);
+            if (*msgStatus == AJ_OK && context.numSignals != 0) {
+                uint16_t indx;
+                for (indx = 0; indx < context.numSignals; indx++) {
+                    if (context.signals[indx].signalType == SIGNAL_TYPE_DATA_CHANGED) {
+                        *msgStatus = AJCPS_SendPropertyChangedSignal(bus, context.signals[indx].signalId, AJCPS_GetCurrentSessionId());
+                    } else if (context.signals[indx].signalType == SIGNAL_TYPE_DISMISS) {
+                        *msgStatus = AJCPS_SendDismissSignal(bus, context.signals[indx].signalId, AJCPS_GetCurrentSessionId());
+                    }
+                }
+            }
+        }
+        break;
+
+        GET_URL_CASES
+        *msgStatus = AJCPS_SendRootUrl(msg, msg->msgId);
+        break;
+
+    case AJ_SIGNAL_SESSION_LOST:
+        break;
+
+    default:
+        AJSVC_ServiceStatus = AJSVC_SERVICE_STATUS_NOT_HANDLED;
+        break;
+    }
+
+    return AJSVC_ServiceStatus;
+}

@@ -1,0 +1,40 @@
+import os
+
+Import('env')
+
+tests_env = env.Clone()
+
+tests_env.Append(CPPDEFINES = ['AJ_MAIN'])
+tests_env.Append(CPPPATH = ['./inc'])
+
+tests_env.Append(LIBPATH = ['#dist/lib'])
+#tests_env.Prepend(LIBS = ['ajtcl_services'])
+#edited by Peter
+tests_env.Prepend(LIBS = ['ajtcl_services', 'ajtcl_services_config'])
+
+common_srcs = [ s for s in Glob('common/*.c')
+                if tests_env['enable_onboarding'] or not s.name == 'OnboardingSample.c' ]
+
+build_tests = [
+#TODO remove config
+    { 'name' : 'ACServer', 'defines' : [ 'CONFIG_SERVICE' ] },
+    #{ 'name' : 'ACServer', 'defines' : [ 'CONFIG_SERVICE', #'CONTROLPANEL_SERVICE' ] },
+    { 'name' : 'AllInOneServer', 'defines' : [ 'CONFIG_SERVICE', 'NOTIFICATION_SERVICE_PRODUCER', 'NOTIFICATION_SERVICE_CONSUMER' ] }
+]
+
+def common_object_generator(sample_name):
+    for src in common_srcs:
+        src_name = os.path.splitext(src.name)[0]
+        output = "%s/%s" % (sample_name, src_name)
+        yield test_env.Object(output, src)
+
+for test in build_tests:
+    sample_name = test['name']
+    test_env = tests_env.Clone()
+    test_env.MergeFlags({ 'CPPDEFINES' : test['defines'] })
+    project_objs = test_env.Object(test_env.Glob(sample_name + '/*.c'))
+    common_objs = [ object for object in common_object_generator(sample_name) ]
+    objs = project_objs + common_objs
+    prog = test_env.Program(sample_name + 'Test',  objs)
+    test_env.Install('#dist/bin', prog)
+

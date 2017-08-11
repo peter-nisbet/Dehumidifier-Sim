@@ -1,0 +1,47 @@
+Import('env')
+
+# Arduino does not build binaries; just sets up for inclusion in Arduino IDE
+env['build'] = False
+
+arduinoLibDir = '#dist/arduino_due/libraries/AllJoyn/'
+
+# Install the .c files as .cpp files for the Arduino IDE to consume.
+srcs = [
+    Glob('src/common/*.c'),
+    Glob('src/config/*.c'),
+    Glob('src/controlpanel/*.c'),
+    Glob('src/controlpanel/Common/*.c'),
+    Glob('src/controlpanel/Widgets/*.c'),
+    Glob('src/notification/*.c'),
+    Glob('src/onboarding/*.c'),
+    Glob('src/time/*.c'),
+]
+env.InstallAs([ File(arduinoLibDir + f.name.replace('.c' , '.cpp')) for f in srcs ], srcs)
+
+# Install the Arduino specific examples into their source
+env.Install(Dir(arduinoLibDir).abspath, Dir('src/target/arduino/examples/'))
+
+# Install the generic .c sample and test programs from the sample and
+# test directories into their destination while changing the
+# extension.
+
+# TODO: need to create wrapper .ino files for each of the test and
+# sample programs and to adapt the template code below to match the
+# services samples and tests.
+
+# Install test programs
+tests = [
+]
+for test in tests:
+    tdir = arduinoLibDir + 'tests/AJ_' + test
+    env.Install(tdir, 'src/target/arduino/tests/AJ_' + test + '/AJ_' + test + '.ino')
+    env.InstallAs(tdir + '/' + test + '.cpp', 'test/' + test + '.c')
+
+# Install samples
+samples = [
+]
+for sample in samples:
+    sdir = arduinoLibDir + 'samples/AJ_' + sample
+    env.Install(sdir, 'src/target/arduino/samples/AJ_' + sample + '/AJ_' + sample + '.ino')
+    env.InstallAs(sdir + '/' + sample + '.cpp', 'samples/' + sample + '.c')
+

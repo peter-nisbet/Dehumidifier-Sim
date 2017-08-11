@@ -1,0 +1,41 @@
+AllJoyn Thin Base Services Version 16.04 Release Notes
+==================================================
+
+Fully Validated Platforms
+-------------------------
+1) Linux Ubuntu 14.04 LTS (64 bit)
+
+Focus of Version 16.04
+-------------------------------
+Platform and language support
+Base Services has been built and continually tested on every supported platform to ensure that it builds and functions correctly. The samples and documentation have also both been updated in order to improve the developer experience. Remaining prominent issues are listed in the Known Issues section below.
+ 
+Updating to Core 16.04
+Base Services has been updated to use the most recent 16.04 version of AllJoyn Core. 
+
+Updating for Security 2.0
+Security 2.0 is still developer preview however in preparation for eventual release, Base Services has been updated to include Security 2.0 support. Specifically, the onboarding sample has been updated to demonstrate claiming permissions.
+
+Features added in Version 16.04
+-------------------------------
+ASABASE-575     Improvements to Onboarding for integration with Security 2.0
+ASABASE-506     Sec 2.0: Base Services support for security 2
+
+Full list: https://jira.allseenalliance.org/issues/?filter=12422
+
+Issues Addressed in Version 16.04
+-------------------------------
+ASABASE-690     Base Thin NotificationProducerSample fails to send Notification
+ASABASE-630     Thin Onboarding interface lacks argument names
+ASABASE-602     Connection error after Standard Onboarder first onboards a Thin Onboardee
+ASABASE-566     Test executables are not built for Thin Base Services
+ASABASE-565     Onboarding on Thin Base Services is missing symbols.
+
+Full list: https://jira.allseenalliance.org/issues/?filter=12420
+
+Known Issues added in Version 16.04
+-------------------------------
+ASABASE-698     Thin Controllee Sample Control Panel objects are not discoverable
+ASABASE-303     In multiple device enviroment cpp/ios based Control Panel Controlers fail to join session to controlees.
+
+Full list: https://jira.allseenalliance.org/issues/?filter=12421

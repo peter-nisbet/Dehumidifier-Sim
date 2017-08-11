@@ -1,0 +1,78 @@
+file /home/peter/Desktop/Alljoyn_SC/services/base_tcl/SConstruct,line 182:
+	Configure(confdir = .sconf_temp)
+scons: Configure: ".sconf_temp/conftest_0.c" is up to date.
+scons: Configure: The original builder output was:
+  |.sconf_temp/conftest_0.c <-
+  |  |#include <ajtcl/aj_bus.h>
+  |  |int main(void) { return 0; }
+  |
+scons: Configure: Building ".sconf_temp/conftest_0.o" failed in a previous run and all its sources are up to date.
+scons: Configure: The original builder output was:
+  |	[CC]      .sconf_temp/conftest_0.c
+  |
+scons: Configure: ".sconf_temp/conftest_1.c" is up to date.
+scons: Configure: The original builder output was:
+  |.sconf_temp/conftest_1.c <-
+  |  |#include <ajtcl/aj_bus.h>
+  |  |int main(void) { return 0; }
+  |
+scons: Configure: ".sconf_temp/conftest_1.o" is up to date.
+scons: Configure: The original builder output was:
+  |	[CC]      .sconf_temp/conftest_1.c
+  |
+scons: Configure: ".sconf_temp/conftest_1" is up to date.
+scons: Configure: The original builder output was:
+  |	[LINK]    .sconf_temp/conftest_1
+  |
+scons: Configure: Checking for uncrustify command...
+scons: Configure: (cached) yes
+
+scons: Configure: Checking for AllJoyn library ajtcl...
+scons: Configure: ".sconf_temp/conftest_2.c" is up to date.
+scons: Configure: The original builder output was:
+  |.sconf_temp/conftest_2.c <-
+  |  |#include <ajtcl/aj_bus.h>
+  |  |int main(void) { return 0; }
+  |
+scons: Configure: ".sconf_temp/conftest_2.o" is up to date.
+scons: Configure: The original builder output was:
+  |	[CC]      .sconf_temp/conftest_2.c
+  |
+scons: Configure: ".sconf_temp/conftest_2" is up to date.
+scons: Configure: The original builder output was:
+  |	[LINK]    .sconf_temp/conftest_2
+  |
+scons: Configure: (cached) yes
+
+scons: Configure: Checking for C function AJ_EnableSoftAP()... 
+scons: Configure: ".sconf_temp/conftest_3.c" is up to date.
+scons: Configure: The original builder output was:
+  |.sconf_temp/conftest_3.c <-
+  |  |
+  |  |
+  |  |#include <assert.h>
+  |  |#include <ajtcl/aj_wifi_ctrl.h>
+  |  |
+  |  |
+  |  |int main() {
+  |  |#if defined (__stub_AJ_EnableSoftAP) || defined (__stub___AJ_EnableSoftAP)
+  |  |fail fail fail
+  |  |#else
+  |  |AJ_EnableSoftAP(NULL, 0, NULL, 0);
+  |  |#endif
+  |  |
+  |  |return 0;
+  |  |}
+  |  |
+  |
+scons: Configure: ".sconf_temp/conftest_3.o" is up to date.
+scons: Configure: The original builder output was:
+  |	[CC]      .sconf_temp/conftest_3.c
+  |
+scons: Configure: Building ".sconf_temp/conftest_3" failed in a previous run and all its sources are up to date.
+scons: Configure: The original builder output was:
+  |	[LINK]    .sconf_temp/conftest_3
+  |
+scons: Configure: (cached) no
+
+

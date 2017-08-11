@@ -1,0 +1,30 @@
+import os
+
+Import('env')
+
+src_env = env.Clone()
+# moved from parent to avoid global defines over samples
+src_env.Append(CPPDEFINES = [ 'CONFIG_SERVICE',
+                          'NOTIFICATION_SERVICE_PRODUCER',
+                          'NOTIFICATION_SERVICE_CONSUMER'
+                          ])
+
+srcs = []
+srcs.extend(src_env.Glob('common/*.c'))
+srcs.extend(src_env.Glob('config/*.c'))
+srcs.extend(src_env.Glob('controlpanel/*.c'))
+srcs.extend(src_env.Glob('controlpanel/Common/*.c'))
+srcs.extend(src_env.Glob('controlpanel/Widgets/*.c'))
+srcs.extend(src_env.Glob('notification/*.c'))
+if src_env['enable_onboarding']:
+    srcs.extend(src_env.Glob('onboarding/*.c'))
+
+objs = src_env.Object(srcs)
+lib = src_env.Library("ajtcl_services", objs)
+src_env.Install("#dist/lib", lib)
+
+if src_env['build_shared']:
+    objs = src_env.SharedObject(srcs)
+    lib = src_env.SharedLibrary("ajtcl_services", objs)
+    src_env.Install("#dist/lib", lib)
+

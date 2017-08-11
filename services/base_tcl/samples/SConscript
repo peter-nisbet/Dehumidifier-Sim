@@ -1,0 +1,42 @@
+import os
+
+Import('env')
+
+samples_env = env.Clone()
+
+progs = []
+
+samples_env.Append(CPPDEFINES = {
+    'AJ_MAIN': None,
+    'AJ_NUM_REPLY_CONTEXTS': '8',
+    'AJ_MAX_OBJECT_LISTS': '9',
+    'ANNOUNCE_BASED_DISCOVERY': '1'
+})
+samples_env.Append(CPPPATH = './inc')
+
+samples_env.Append(LIBPATH = '#dist/lib')
+samples_env.Prepend(LIBS = ['ajtcl_services_config'])
+samples_env.Prepend(LIBS = ['ajtcl_services'])
+
+build_samples = [
+    {'name':'Controllee', 'defines':['CONFIG_SERVICE']},
+    {'name':'NotificationConsumer', 'defines':['NOTIFICATION_SERVICE_CONSUMER', 'CONFIG_SERVICE']},
+    {'name':'NotificationProducer', 'defines':['NOTIFICATION_SERVICE_PRODUCER', 'CONFIG_SERVICE']},
+    {'name':'NotifConfig', 'defines':['CONFIG_SERVICE', 'NOTIFICATION_SERVICE_PRODUCER', 'NOTIFICATION_SERVICE_CONSUMER']},
+]
+
+if env['enable_onboarding']:
+    build_samples += [
+        {'name':'Onboardee', 'defines':['CONFIG_SERVICE', 'ONBOARDING_SERVICE']},
+    ]
+
+for sample in build_samples:
+    name = sample['name']
+    sample_env = samples_env.Clone()
+    sample_env.Append(CPPDEFINES = sample['defines'])
+    project_objs = sample_env.Object(sample_env.Glob(name + '/*.c'))
+    common_objs = sample_env.Object("%s_common" % name, sample_env.Glob('common/*.c'))
+    objs = project_objs + common_objs
+    program = sample_env.Program(name + 'Sample', objs)
+    sample_env.Install('#dist/bin', program)
+

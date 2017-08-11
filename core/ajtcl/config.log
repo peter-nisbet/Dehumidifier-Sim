@@ -1,0 +1,21 @@
+file /home/peter/Desktop/Alljoyn_SC/core/ajtcl/SConstruct,line 157:
+	Configure(confdir = .sconf_temp)
+scons: Configure: Checking for uncrustify command...
+scons: Configure: (cached) yes
+
+
+file /home/peter/Desktop/Alljoyn_SC/core/ajtcl/unit_test/SConscript,line 12:
+	Configure(confdir = .sconf_temp)
+scons: Configure: Checking for C++ header file gtest/gtest.h... 
+scons: Configure: ".sconf_temp/conftest_0.cpp" is up to date.
+scons: Configure: The original builder output was:
+  |.sconf_temp/conftest_0.cpp <-
+  |  |
+  |  |#include <gtest/gtest.h>
+  |  |
+  |  |
+  |
+	[CXX]     .sconf_temp/conftest_0.cpp
+scons: Configure: yes
+
+
